@@ -8,7 +8,8 @@ Python 2
 
 import myBio as bio
 
-codon2aa = {
+def getGeneticCode(trans_table) : 
+    tableau={
     'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
     'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
     'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K',
@@ -26,22 +27,41 @@ codon2aa = {
     'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',
     }
+    if trans_table==1: 
+        return tableau
+    elif trans_table==2 : 
+        tableau["AGA"]="_"
+        tableau["AGG"]="_"
+        tableau["ATA"]="M"
+        tableau["TGA"]="W"
+        return tableau
+    elif trans_table==3 : 
+        tableau["ATA"]="M"
+        tableau["CTT"]="T"
+        tableau["CTC"]="T"
+        tableau["CTA"]="T"
+        tableau["CTG"]="T"
+        tableau["TGA"]="W"
+        return tableau
+    elif trans_table==4: 
+        tableau["TGA"]="W"
+        return tableau
+    elif trans_table==5 : 
+        tableau["AGA"]="S"
+        tableau["AGG"]="S"
+        tableau["ATA"]="M"
+        tableau["TGA"]="W"
+        return tableau
+    elif trans_table==6 : 
+        tableau["TAA"]="Q"
+        tableau["TAG"]="Q"
+        return tableau
+    else:
+        print "NCBI ID incorrect"
 
-#### Examples from chapter 3 ####
-# if bio.isDNA(seq):
-#     result = bio.translate_frame(seq,2,codon2aa)
-# else:
-#     print('Sorry, this is not a nucleic sequence')
 
-# bio.writeFASTA(result,'./Haemophilus_frames.fasta')
-
-#####
-
-
-#### Chapter 4 ####
-
-
-def getGeneticCode(NCBI_ID):
+def findORF(seq,threshold,codeTable) : 
+    seq_frames=mybio.translate_frame(seq,12,codeTable)
 
 
 myTable = getGeneticCode(1)
