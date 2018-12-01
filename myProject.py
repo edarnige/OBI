@@ -67,18 +67,6 @@ def findORF(seq,threshold,codeTable) :
 myTable = getGeneticCode(1)
 
 
-#Dictionary of DNA code is saved in variable 'code'
-code = bio.readFASTA('./Haemophilus_influenzae_s723.fasta')
-#Sequence only is saved in variable 'seq'
-seq = code.values()[0]
-print 'The length of the sequence is' len(seq)
-
-
-def findORF(seq, threshold, codeTable):
-    #problem 4.6.1.2 gives algorithm
-    isGene3(seq)
-    translate_frame(seq,complement,frame,codonTable)
-   
 
 
 listORFs =findORF(DNAseq,3*90,myTable)
