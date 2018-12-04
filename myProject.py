@@ -62,9 +62,30 @@ def getGeneticCode(trans_table) :
 
 def findORF(seq,threshold,codeTable) : 
     ORF=[]
-    rev_seq=mybio.complement(seq)
-    rev_seq=rev_seq[::-1]
+    threshold=threshold//3
+    count=0
+    seq_frames=mybio.translate_frame(seq,12,codeTable)
+    
+    for i in range(0,len(seq_frames.values())) : 
+        if (mybio.countWord(seq_frames.values()[i],codeTable["ATG"])>0 and mybio.countWord(seq_frames.values()[i],"_")>0) : 
+            index=0
 
+            while index<len(seq_frames.values()[i]) : 
+                AA_end=seq_frames.values()[i].find("_",index)
+                AA_start=seq_frames.values()[i].find(codeTable["ATG"],index)
+                if AA_end-AA_start>= threshold : 
+                    frame=int(seq_frames.keys()[i].replace("frame",""))
+                    if frame<0 : 
+                        start_index=len(seq)-abs(frame)-AA_end*3-3
+                        end_index=len(seq)-abs(frame)-index*3
+                    else : 
+                        start_index=frame+AA_start*3
+                        end_index=min(len(seq),frame+AA_end*3+3)
+                    
+                    ORF.append({"start": start_index , "stop": end_index , "frame": frame , "protein":seq_frames.values()[i][AA_start:AA_end] , "protein": (AA_end-AA_start)*3})
+                index+=AA_end
+
+    return ORF
     # count=0
     # seq_frames=mybio.translate_frame(seq,12,codeTable)
     
