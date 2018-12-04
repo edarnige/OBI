@@ -61,11 +61,13 @@ def getGeneticCode(trans_table) :
 
 
 def findORF(seq,threshold,codeTable) : 
-    ORF=[]
+    ORF=[] 
+
     threshold=threshold//3
     count=0
     seq_frames=mybio.translate_frame(seq,12,codeTable)
     
+    seq=seq.values()[0]
     for i in range(0,len(seq_frames.values())) : 
         if (mybio.countWord(seq_frames.values()[i],codeTable["ATG"])>0 and mybio.countWord(seq_frames.values()[i],"_")>0) : 
             index=0
@@ -73,17 +75,19 @@ def findORF(seq,threshold,codeTable) :
             while index<len(seq_frames.values()[i]) : 
                 AA_end=seq_frames.values()[i].find("_",index)
                 AA_start=seq_frames.values()[i].find(codeTable["ATG"],index)
+                if (AA_end==-1 or AA_start==-1) : 
+                    break
                 if AA_end-AA_start>= threshold : 
                     frame=int(seq_frames.keys()[i].replace("frame",""))
                     if frame<0 : 
-                        start_index=len(seq)-abs(frame)-AA_end*3-3
-                        end_index=len(seq)-abs(frame)-index*3
+                        start_index=len(seq)-(abs(frame)-1)-AA_end*3-3
+                        end_index=len(seq)-(abs(frame)-1)-index*3
                     else : 
-                        start_index=frame+AA_start*3
-                        end_index=min(len(seq),frame+AA_end*3+3)
+                        start_index=(frame-1)+AA_start*3
+                        end_index=min(len(seq),(frame-1)+AA_end*3+3)
                     
-                    ORF.append({"start": start_index , "stop": end_index , "frame": frame , "protein":seq_frames.values()[i][AA_start:AA_end] , "protein": (AA_end-AA_start)*3})
-                index+=AA_end
+                    ORF.append({"start": start_index , "stop": end_index , "frame": frame , "protein":seq_frames.values()[i][AA_start:AA_end] , "length": ((AA_end-AA_start)*3)})
+                index=AA_end+1
 
     return ORF
     # count=0
@@ -129,27 +133,32 @@ print(listORFs[0]['protein']) # M.....*
 print(listORFs[1]['start'])
 
 
-def getLengths(orf_list):
-    for i in orf_list:
-        print "The length of ORF",i,"is", len(i)
-    
-lengthlist = getLengths(listORFs)
+def getLengths(orfList) : 
+    length=[]
+    for i in range(0,len(orfList)) : 
+        value=orfList[i]["length"](0)
+        length.append({"ORF": i , "length": value})
 
-def getLongestORF(orflist):
-    max = orflist[0]
-    for i in orflist:
-        if i > max:
-            max = i
-    return max
+    return length
 
-orf = getLongestORF(listORFs)
+def getLongestORF(orfList) : 
+    length=getLengths(orfList)
+    max_val=0
+    for i in range(0,len(length)) : 
+        if length[i]["length"]>max_val : 
+            index=i
+            max_val=length[i]["length"]
+    return orfList[index]
 
-def getTopLongestORF(orflist,value):
-    size=len(orflist)
-    limit = value * size # = amount of elements in this percentile
-    for i in range((size-limit),size) #??
-        return i
 
+def TopLongestORF(orfList,value) : 
+    import math
+
+    length=len(orfList)
+
+    nombre=math.floor(length * value)
+
+    return orfList[-nombre:]
 
 topOrfs = getTopLongestORF(listORFs,0.25) # 25% percentile
 
