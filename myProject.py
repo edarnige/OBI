@@ -1,6 +1,6 @@
 #from td1 import *
 
-import td1 as mybio
+import MyBio as mybio
 
 def getGeneticCode(trans_table) : 
     tableau={
@@ -72,8 +72,6 @@ def findORF(seq,threshold,codeTable) :
             while index<len(seq_frames.values()[i]) : 
                 AA_end=seq_frames.values()[i].find("_",index)
                 AA_start=seq_frames.values()[i].find(codeTable["ATG"],index)
-                print("e ",AA_end)
-                print("s ",AA_start)
                 if (AA_end==-1 or AA_start==-1) : 
                     break
                 if AA_end-AA_start>= threshold : 
