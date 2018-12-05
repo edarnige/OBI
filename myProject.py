@@ -151,10 +151,15 @@ def readCSV(filename) :
 
 dicto={"a": 1 , "b": 2 , "c": 3, "d": 4}
 
-def writeCSV(filename) : 
-    csv_file=open(filename,'w')
-    for key in dicto.keys() : 
-        csv_file.write("%s,%s\n"%(key.dicto[key]))
+def writeCSV(filename,dictionary) : 
+    file_name=open(filename,'w')
+    file_temp_writer=csv.writer(file_name)
+    for d in dicto:
+        temp_list=[]
+        for key,value in d.items():
+            temp_list.append(key)
+            temp_list.append(value)
+        file_temp_writer.writerow(temp_list)
 
 
 
