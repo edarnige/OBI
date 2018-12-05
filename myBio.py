@@ -7,113 +7,111 @@ Juan Garcia - Eden Darnige - Alexandre Lambard
 Python 2
 '''
 
-# def mystere(prot):
-#     nb_cys = 0
-#     for aa in prot:
-#         if aa == "C" :
-#             nb_cys = nb_cys + 1
-#     return nb_cys
+def mystere(prot):
+    nb_cys = 0
+    for aa in prot:
+        if aa == "C" :
+            nb_cys = nb_cys + 1
+    return nb_cys
 
 
-def isDNA(seq):
-    bad=[]
-    nucleotides='ATGC'
-    for NA in seq:
-        if NA in nucleotides:#if all(NA in nucleotides for NA in seq):
-            DNA= True
-    for NA in seq:
-        if NA not in nucleotides:
-            bad.append(NA)
-            DNA= False
-    if not bad:
-        bad="only ATGC"
-    print'The string contains',bad
-    return DNA
 
-#print isDNA(adn)
+def isDNA(seq) : 
+    for i in seq : 
+        if (i!="c" and i!="t" and i!="a" and i!="g" ) : 
+            return False 
+    return True
 
-# def countPro(seq) : 
-#     cont=0
-#     for i in seq : 
-#         if (i.isupper() and i=="P") : 
-#             cont=cont+1
+
+
+def countPro(seq) : 
+    cont=0
+    for i in seq : 
+        if (i.isupper() and i=="P") : 
+            cont=cont+1
             
-#     print "There are %d Proline aa in the protein sequence" %cont
-#     return cont
+    print "There are %d Proline aa in the protein sequence" %cont
+    return cont
 
-# seq='MVHLSAEEKEAVLGLWGKVNVDEVGGEALGRLLVVYPWTQPPPPP'
-# countPro(seq)
 
-# def countAll(seq,aa) : 
-#     cont=0
-#     for i in seq : 
-#         if (i==aa and i.isupper()) : 
-#             cont=cont+1
-#     print "There are %d %s aa in the protein sequence" %(cont,aa)
-#     return cont
+def countAll(seq,aa) : 
+    cont=0
+    for i in seq : 
+        if (i==aa and i.isupper()) : 
+            cont=cont+1
+    print "There are %d %s aa in the protein sequence" %(cont,aa)
+    return cont
 
-# countAll(seq,"P")
-# countAll(seq,"Q")
-
-# def oneWord(seq,start,wlen) : 
-#     if start>=0 and start+wlen<len(seq): 
+def oneWord(seq,start,wlen) : 
+    if start>=0 and start+wlen<len(seq): 
         
-#         word=""
-#         it=0
-#         while it<wlen : 
+        word=""
+        it=0
+        while it<wlen : 
             
-#             word=word+seq[start+it]
-#             it=it+1
-#         return word    
-#     else : 
-#         print "Starting index is not correct"
-     
+            word=word+seq[start+it]
+            it=it+1
+        return word    
+    else : 
+        print "Starting index is not correct"
+    
 
 
-# def countWord(seq,word) : 
-#     if word in seq : 
-#         cont=0
-#         for i in range(0,len(seq)-len(word)) : 
-#             w=oneWord(seq,i,len(word))
-#             if w==word : 
-#                 cont=cont+1
-#         return cont
-#     else : 
-#         print "The word is not part of the sequence"
+def countWord(seq,word) : 
+    if word in seq : 
+        cont=0
+        for i in range(0,len(seq)-len(word)) : 
+            w=oneWord(seq,i,len(word))
+            if w==word : 
+                cont=cont+1
+        return cont
+    else : 
+        print "The word is not part of the sequence"
 
 
-# def isCodonStart(seq,pos) : 
-#     codon=oneWord(seq,pos,3)
-#     if codon=="ATG" : 
-#         return True
-#     else : 
-#         return False
+def isCodonStart(seq,pos) : 
+    codon=oneWord(seq,pos,3)
+    if codon=="ATG" : 
+        return True
+    else : 
+        return False
 
-# def isCodonStop(seq,pos) : 
-#     codon=oneWord(seq,pos,3)
+def isCodonStop(seq,pos) : 
+    codon=oneWord(seq,pos,3)
 
-#     if (codon=="TAA" or codon=="TAG" or codon=="TGA") : 
-#         return True
-#     else : 
-#         return False
-
-
-
-# def isGene3(seq) : 
-#     rem=len(seq)%3
-#     for i in range(0,len(seq)-rem) :
-#         if isCodonStart(seq,i) :
-#             frame_start=i%3 
-#             if isCodonStop(seq,i) : 
-#                 frame_stop=i%3
-#                 if frame_start==frame_stop : 
-#                     return True
-#                 else : 
-#                     return False 
+    if (codon=="TAA" or codon=="TAG" or codon=="TGA") : 
+        return True
+    else : 
+        return False
 
 
+def isGene(seq) : 
+    rem=len(seq)%3 
+    cod_start=0
+    cod_fin=0
+    for i in range(0,len(seq)-rem,3) : 
+        if isCodonStart(seq,i) : 
+            cod_start=1
+        elif isCodonStop(seq,i) : 
+            cod_fin=1
+    if cod_start==1 and cod_fin==1 : 
+        return True
+    else : 
+        return False
 
-## Chapter 3
+def isGene3(seq) : 
+    rem=len(seq)%3
+    for i in range(0,len(seq)-rem) :
+        if isCodonStart(seq,i) :
+            frame_start=i%3 
+            if isCodonStop(seq,i) : 
+                frame_stop=i%3
+                if frame_start==frame_stop : 
+                    return True
+                else : 
+                    return False 
+
+## 3
 
 def readFASTA(filename) :   
     fasta = {}
@@ -139,8 +137,7 @@ def readFASTA(filename) :
     return fasta
 
 def writeFASTA(seq,filename) : 
-    #if (type(seq)==str and type(filename)==str and isDNA(seq)) : 
-    if (type(filename)==str):
+    if (type(seq)==str and type(filename)==str and isDNA(seq)) : 
         fichier=open(filename,'w')
         header=raw_input("Enter header of FASTA file: ")
         fichier.write(">"+header)
@@ -150,10 +147,6 @@ def writeFASTA(seq,filename) :
     else : 
         print "Not working..."
 
-#writeFASTA("atttggcctttagggac","/home/parallels/Desktop/Omics/TestWrite.FASTA")
-
-seq=readFASTA("/home/parallels/Desktop/Omics/Test.FASTA")
-seq=seq.values()[0].upper()
 
 def translate(nucl_seq,codonTable):
     protein_seq=''
@@ -181,7 +174,6 @@ codon2aa = {
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',
     }
 
-#print (translate(seq,codon2aa))
 
 def complement(seq):
     complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'} 
@@ -189,10 +181,10 @@ def complement(seq):
     bases = [complement[base] for base in bases] 
     return ''.join(bases)
 
-def translate_frame(seq,complement,frame,codonTable) : 
-    #seq=seq.values()[0]
+def translate_frame(seq,frame,codonTable) : 
+    seq=seq.values()[0]
     sequences={}
-    rev_seq=complement
+    rev_seq=complement(seq)
     rev_seq=rev_seq[::-1]
     for j in range(3) :
         protein_seq='' 
@@ -200,17 +192,18 @@ def translate_frame(seq,complement,frame,codonTable) :
         for i in range(j,len(seq),3) : 
             if seq[i:i+3] in codonTable:
                 protein_seq += codonTable[seq[i:i+3]]
-        sequences["frame{0}".format(j+1)]=protein_seq
+        sequences["frame{}".format(j+1)]=protein_seq
 
         for i in range(j,len(rev_seq),3) : 
             if seq[i:i+3] in codonTable:
                 rev_protein_seq += codonTable[rev_seq[i:i+3]]
-        sequences["frame{0}".format(-(j+1))]=rev_protein_seq
+        sequences["frame{}".format(-(j+1))]=rev_protein_seq
+
 
         ### frame-1 est frame-3, et vice versa
     if (-3<=frame<=3 and frame!=0) : 
         string="frame"+str(frame)
-        return {string: sequences[string]}
+        return {'string': sequences[string]}
     elif frame==-6 : 
         return {"frame-1": sequences["frame-1"],"frame-2": sequences["frame-2"],"frame-3": sequences["frame-3"]}
     elif frame==6 : 
@@ -219,9 +212,9 @@ def translate_frame(seq,complement,frame,codonTable) :
         return sequences
     else : 
         print "Frame error"
-    
-complement=complement(seq)
-a=translate_frame(seq,complement,-3,codon2aa)
+
+
+
 
 
 
