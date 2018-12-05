@@ -131,11 +131,13 @@ for i in range(0,len(listofORF)) :
 print check
 def TopLongestORF(orfList,value) : 
     import math
-
+    from operator import itemgetter
     length=len(orfList)
 
     nombre=math.floor(length * value)
 
+    orfList=sorted(orfList,key=itemgetter('length'))
+    
     return orfList[-nombre:]
 
 
