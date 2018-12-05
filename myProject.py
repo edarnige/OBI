@@ -135,7 +135,8 @@ def TopLongestORF(orfList,value) :
     length=len(orfList)
 
     nombre=math.floor(length * value)
-
+    nombre=int(nombre)
+    
     orfList=sorted(orfList,key=itemgetter('length'))
     
     return orfList[-nombre:]
