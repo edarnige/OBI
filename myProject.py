@@ -1,12 +1,6 @@
-'''
-Projet Alone in the Dark
-myProject
-2018.11.28
-Juan Garcia - Eden Darnige - Alexandre Lambard
-Python 2
-'''
+#from td1 import *
 
-import myBio as bio
+import td1 as mybio
 
 def getGeneticCode(trans_table) : 
     tableau={
@@ -59,77 +53,110 @@ def getGeneticCode(trans_table) :
     else:
         print "NCBI ID incorrect"
 
+seq=mybio.readFASTA("/media/juagarcia/JUANMA/Python/BioPython/tes.fas")
+
 
 def findORF(seq,threshold,codeTable) : 
+    #seq=seq.values()[0]
+    ORF=[] 
+
+    threshold=threshold//3
+    count=0
     seq_frames=mybio.translate_frame(seq,12,codeTable)
-
-
-myTable = getGeneticCode(1)
-
-
-
-
-listORFs =findORF(DNAseq,3*90,myTable)
-print len(listORFs) #Number of ORFs
-
-# for each ORF:
-print(len(listORFs) ) # Number of ORFs
-print(listORFs[0]['start'])
-print(listORFs[0]['stop'])
-print(listORFs[0]['frame']) # 1, 2, 3, -1, -2, or -3
-print(listORFs[0]['length']) # as a tuple expressed in bp
-print(listORFs[0]['protein']) # M.....*
-print(listORFs[1]['start'])
-
-
-def getLengths(orf_list):
-    for i in orf_list:
-        print "The length of ORF",i,"is", len(i)
     
-lengthlist = getLengths(listORFs)
+    seq=seq.values()[0]
+    for i in range(0,len(seq_frames.values())) : 
+        if (mybio.countWord(seq_frames.values()[i],codeTable["ATG"])>0 and mybio.countWord(seq_frames.values()[i],"_")>0) : 
+            index=0
 
-def getLongestORF(orflist):
-    max = orflist[0]
-    for i in orflist:
-        if i > max:
-            max = i
-    return max
+            while index<len(seq_frames.values()[i]) : 
+                AA_end=seq_frames.values()[i].find("_",index)
+                AA_start=seq_frames.values()[i].find(codeTable["ATG"],index)
+                print("e ",AA_end)
+                print("s ",AA_start)
+                if (AA_end==-1 or AA_start==-1) : 
+                    break
+                if AA_end-AA_start>= threshold : 
+                    frame=int(seq_frames.keys()[i].replace("frame",""))
+                    if frame<0 : 
+                        start_index=len(seq)-(abs(frame)-1)-AA_end*3-3
+                        end_index=len(seq)-(abs(frame)-1)-AA_start*3-3
+                    else : 
+                        start_index=(frame-1)+AA_start*3
+                        end_index=(frame-1)+AA_end*3
+                    
+                    ORF.append({"start": start_index , "stop": end_index , "frame": frame , "protein":seq_frames.values()[i][AA_start:AA_end] , "length": ((AA_end-AA_start)*3) , "length1" : end_index-start_index})
+                index=AA_end+1
 
-orf = getLongestORF(listORFs)
+    return ORF
+            #  sub_seq=seq_frames.values()[i].split("_")
 
-def getTopLongestORF(orflist,value):
-    size=len(orflist)
-    limit = value * size # = amount of elements in this percentile
-    for i in range((size-limit),size) #??
-        return i
+            #  for j in range(0,len(sub_seq)) :
+            #      if "M" in sub_seq[j] : 
+            #          index=sub_seq[j].index("M")
+            #          for k in index : 
+            #              if len(sub_seq[j])-k>= threshold : 
+            #                  ORF[count]={}
+            #                  ORF["start"]=k*(j+1)
+            #                  ORF["stop"]=len
+            #                  ORF["frame"]=seq_frames.keys()[i].replace("frame","")
+            #                  ORF["protein"]=sub_seq[j][index[k]:]
+            #                  ORF["length"]=len(sub_seq[j][index[k]:])*3
+            #                  count+=1
+
+                                 
+
+             
+def getLengths(orfList) : 
+    length=[]
+    for i in range(0,len(orfList)) : 
+        value=orfList[i]["length"]
+        length.append({"ORF": i , "length": value})
+
+    return length
+
+def getLongestORF(orfList) : 
+    length=getLengths(orfList)
+    max_val=0
+    for i in range(0,len(length)) : 
+        if length[i]["length"]>max_val : 
+            index=i
+            max_val=length[i]["length"]
+    return orfList[index]
+listofORF=findORF(seq,3,getGeneticCode(1))
+print listofORF
+for i in range(0,len(listofORF)) : 
+    check=1
+    if listofORF[i]["length"]!=listofORF[i]["length1"] : 
+        check=0
+
+print check
+def TopLongestORF(orfList,value) : 
+    import math
+
+    length=len(orfList)
+
+    nombre=math.floor(length * value)
+
+    return orfList[-nombre:]
 
 
-topOrfs = getTopLongestORF(listORFs,0.25) # 25% percentile
+##### READ AND WRITE CSV FILES 
 
 
+def readCSV(filename) : 
+    csv_file=open(filename,'r')
+    reader=csv.reader(csv_file)
+    mydict=dict((rows[0],rows[1]) for rows in reader)
+    #mydict={k:int(v) for k, v in mydict.iteritems()}  #string to int
+    print mydict
 
+dicto={"a": 1 , "b": 2 , "c": 3, "d": 4}
 
-dicto={}
-
-
-def readCSV(filename, separator,data):
-
-
-def writeCSV(filename, separator):
-
-error  = proj.writeCSV('/my_home/my_project/my_data.csv',';',dicto)
-result = readCSV('/my_home/my_project/my_data.csv',';')
-
-if (dicto == result):
-    print('OK')
-else:
-    print('KO')
-
-def compare(orflist1,orflist2):
-
-
-##### Genebank parser #####
-
+def writeCSV(filename) : 
+    csv_file=open(filename,'w')
+    for key in dicto.keys() : 
+        csv_file.write("%s,%s\n"%(key.dicto[key]))
 
 
 
