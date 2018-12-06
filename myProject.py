@@ -9,6 +9,26 @@ Python 2
 import MyBio as mybio
 
 def getGeneticCode(trans_table) : 
+    """Returns a genetic code table
+    
+    This function returns a genetic code table, where DNA codons and aminoacids are related. This 
+    function is based on the information extracted from the NCBI website https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi. 
+    Based on the standard code table, modifications are added following the guidelines given on the webpage.
+    In order to avoid time-consuming processes, only a limited number of genetic tables will be 
+    loaded
+    This functions has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    
+    Args: 
+        trans_table: NCBI genetic table ID. This ID is a non-zero number
+        
+    Returns: 
+        A dictionnary where codons are keys and aminoacids are values. This is the format: 
+        {"Codon_1": "AA_1" , "Codon_2": "AA_2" , ...}
+     
+    Raises: 
+        NumericValue: NCBI ID is not correct  
+    
+    """
     tableau={
     'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
     'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
@@ -57,9 +77,7 @@ def getGeneticCode(trans_table) :
         tableau["TAG"]="Q"
         return tableau
     else:
-        print "NCBI ID incorrect"
-
-seq=mybio.readFASTA("/media/juagarcia/JUANMA/Python/BioPython/tes.fas")
+        raise NumericValue("NCBI ID incorrect")
 
 
 def findORF(seq,threshold,codeTable) : 
@@ -93,22 +111,6 @@ def findORF(seq,threshold,codeTable) :
                 index=AA_end+1
 
     return ORF
-            #  sub_seq=seq_frames.values()[i].split("_")
-
-            #  for j in range(0,len(sub_seq)) :
-            #      if "M" in sub_seq[j] : 
-            #          index=sub_seq[j].index("M")
-            #          for k in index : 
-            #              if len(sub_seq[j])-k>= threshold : 
-            #                  ORF[count]={}
-            #                  ORF["start"]=k*(j+1)
-            #                  ORF["stop"]=len
-            #                  ORF["frame"]=seq_frames.keys()[i].replace("frame","")
-            #                  ORF["protein"]=sub_seq[j][index[k]:]
-            #                  ORF["length"]=len(sub_seq[j][index[k]:])*3
-            #                  count+=1
-
-                                 
 
              
 def getLengths(orfList) : 
@@ -127,14 +129,7 @@ def getLongestORF(orfList) :
             index=i
             max_val=length[i]["length"]
     return orfList[index]
-listofORF=findORF(seq,3,getGeneticCode(1))
-print listofORF
-for i in range(0,len(listofORF)) : 
-    check=1
-    if listofORF[i]["length"]!=listofORF[i]["length1"] : 
-        check=0
 
-print check
 def TopLongestORF(orfList,value) : 
     import math
     from operator import itemgetter
@@ -157,8 +152,6 @@ def readCSV(filename) :
     mydict=dict((rows[0],rows[1]) for rows in reader)
     #mydict={k:int(v) for k, v in mydict.iteritems()}  #string to int
     print mydict
-
-#dicto={"a": 1 , "b": 2 , "c": 3, "d": 4}
 
 def writeCSV(filename,dictionary) : 
     file_name=open(filename,'w')
