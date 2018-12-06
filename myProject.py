@@ -1,4 +1,10 @@
-#from td1 import *
+'''
+Projet Alone in the Dark
+myProject
+2018.11.28
+Juan Garcia - Eden Darnige - Alexandre Lambard
+Python 2
+'''
 
 import MyBio as mybio
 
@@ -152,7 +158,7 @@ def readCSV(filename) :
     #mydict={k:int(v) for k, v in mydict.iteritems()}  #string to int
     print mydict
 
-dicto={"a": 1 , "b": 2 , "c": 3, "d": 4}
+#dicto={"a": 1 , "b": 2 , "c": 3, "d": 4}
 
 def writeCSV(filename,dictionary) : 
     file_name=open(filename,'w')
