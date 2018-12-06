@@ -81,9 +81,10 @@ def getGeneticCode(trans_table) :
 
 
 def findORF(seq,threshold,codeTable) : 
-    #seq=seq.values()[0]
     ORF=[] 
-
+    if type(seq) not dict : 
+        raise TypeError
+        
     threshold=threshold//3
     count=0
     seq_frames=mybio.translate_frame(seq,12,codeTable)
@@ -114,6 +115,21 @@ def findORF(seq,threshold,codeTable) :
 
              
 def getLengths(orfList) : 
+    """ Returns the length of ORFs
+    
+    This function retrieves the length of all the ORF of a DNA sequence. This will be stored in a list with 
+    dictionnaries, where the index and the length is added for each ORF. 
+    This functions has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    
+    Args: 
+        orfList: A list of ORF, obtained from the findORF function.
+        
+    Returns: 
+        A list with dictionnaries with index and length value for each ORF. 
+        
+    Raises: 
+                
+    """
     length=[]
     for i in range(0,len(orfList)) : 
         value=orfList[i]["length"]
@@ -122,6 +138,21 @@ def getLengths(orfList) :
     return length
 
 def getLongestORF(orfList) : 
+    """Returns the longest ORF 
+    
+    This function returns an ORF whose length is the highest one of a list of ORF. 
+    It has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+
+    Args: 
+        orfList: A list of ORF, obtained from the findORF function.
+        
+    Returns: 
+        A list with information about the ORF. This will be extracted from the ORF list obtained from 
+        findORF. Therefore, it will have the same format as the ORF list (same keys within the dictionnary)
+        
+    Raises: 
+            
+    """
     length=getLengths(orfList)
     max_val=0
     for i in range(0,len(length)) : 
@@ -131,14 +162,31 @@ def getLongestORF(orfList) :
     return orfList[index]
 
 def TopLongestORF(orfList,value) : 
+    """Extracts the n% longest ORFs 
+    
+    This function retrieves the longest ORFs from a ORF list. To do so, a value which will be used as a threshold 
+    should be given. An index is calculated using the value given by the user.  The ORF list is sorted and the 
+    longest ORFs are extracted. 
+    It has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    
+    Args: 
+        orfList: A list of ORF, obtained from the findORF function.
+        value: A number between 0 and 1, which represents the nth longest ORFs
+        
+    Returns: 
+        A list of ORFs with information about each of them. This list is extracted from the main ORF list. 
+        
+    Raises: 
+           
+    """
     import math
     from operator import itemgetter
     length=len(orfList)
 
     nombre=math.floor(length * value)
-    nombre=int(nombre)
+    nombre=int(nombre) # Avoid using floating number
     
-    orfList=sorted(orfList,key=itemgetter('length'))
+    orfList=sorted(orfList,key=itemgetter('length')) # Sort list according to values in ["length"] key 
     
     return orfList[-nombre:]
 
