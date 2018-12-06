@@ -81,6 +81,34 @@ def getGeneticCode(trans_table) :
 
 
 def findORF(seq,threshold,codeTable) : 
+    """Returns a list of Open Reading Frames (ORF)
+    
+    This function retrieves all the ORF present in a DNA sequence, extracting several data about each 
+    one of them. Since it works with protein sequences to find ORFs, a conversion on the indexes and on the
+    threshold is neccesary to be made. A threshold is used to filter out small ORFs.
+    This function has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    
+    Args: 
+        seq: A dictionnary whose key is a description of the DNA sequence (i.e., header of a FASTA file) 
+        and whose value is a string of a DNA sequence
+        threshold: A number, expressed in nucleotide base-pairs. 
+        codeTable: A genetic code table, like the one that can be obtained using getGeneticCode. 
+        
+    Returns: 
+        A list of dictionnaries, where information about an ORF is stored in each one of them. The format 
+        of the dictionnaries is as follows: 
+            ...
+            listofORF[n]["start"]: starting index in the DNA sequence of nth ORF 
+            listofORF[n]["stop"]: ending index in the DNA sequence of the nth ORF
+            listofORF[n]["frame"]: reading frame 
+            listofORF[n]["protein"]: protein sequence that corresponds to the ORF
+            listofORF[n]["length"]: length, in base-pairs, of the ORF
+            ...
+            
+    Raises: 
+        TypeError: seq is not a dictionnary
+        
+    """
     ORF=[] 
     if type(seq) not dict : 
         raise TypeError
