@@ -35,17 +35,21 @@ lengthlist = proj.getLengths(listORFs)
 
 #Get info about the longest ORF
 orf = proj.getLongestORF(listORFs)
-#print "The longest ORF:",orf
+print "The longest ORF:",orf
 
-#returns dictionary of ORFs in the top x percentile 
-orfs = proj.TopLongestORF(listORFs,0.25)
+#returns dictionary of ORFs in the top 1 percentile of threshold 420
+#Used these to enter into GenBank to find proteins
+orfs = proj.TopLongestORF(listORFs,0.01)
+#print orfs
 
 
 
 
 dicto=listORFs[:]
+
 # proj.writeCSV('ORF_420.csv',dicto)
 
+### Write all data into CSV files, get number of ORFs ###
 
 #Threshold 300
 print "Threshold 300:"
@@ -75,6 +79,13 @@ dicto=listORFs[:]
 #Threshold 0
 print "Threshold 0"
 listORFs= proj.findORF(seq,3*0,codeTable)
+print "how many ORFs:",len(listORFs)
+dicto=listORFs[:]
+#proj.writeCSV('ORF_0.csv',dicto)
+
+#Threshold 360
+print "Threshold 360"
+listORFs= proj.findORF(seq,3*360,codeTable)
 print "how many ORFs:",len(listORFs)
 dicto=listORFs[:]
 #proj.writeCSV('ORF_0.csv',dicto)
