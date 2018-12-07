@@ -221,7 +221,7 @@ def TopLongestORF(orfList,value) :
 
 ##### READ AND WRITE CSV FILES 
 
-def readCSV(filename) : 
+def readCSV(filename,separator) : 
     """Prints a cvs file 
     This function prints a csv file by storing each row in a dictionary. All the dictionnaries are grouped in
     a list. 
@@ -245,7 +245,7 @@ def readCSV(filename) :
     #mydict={k:int(v) for k, v in mydict.iteritems()}  #string to int
     print mydict
 
-def writeCSV(filename,dictionary) : 
+def writeCSV(filename,separator,dictionary) : 
     import csv
     with open(filename,'w') as file_name: 
         file_temp_writer=csv.writer(file_name,delimiter=separator)
@@ -257,6 +257,14 @@ def writeCSV(filename,dictionary) :
                 temp_list.append(value)
             file_temp_writer.writerow(temp_list)
 
+# def compare(orflist1,orflist2) :
+#     identic=[]
+    
+#     for i,j in [orflist1[:]["protein"],orflist2[:]["protein"]] :
+        
+#         if i==j : 
+#             identic[""] 
+         
 
 
 
