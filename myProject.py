@@ -221,8 +221,24 @@ def TopLongestORF(orfList,value) :
 
 ##### READ AND WRITE CSV FILES 
 
-
 def readCSV(filename) : 
+    """Prints a cvs file 
+    This function prints a csv file by storing each row in a dictionary. All the dictionnaries are grouped in
+    a list. 
+    This function has been written by Eden Darnige 
+    
+    Args: 
+        filename: filename of the csv file, as a string
+        separator: row separator, as a string
+    
+    Returns: 
+        A list with dictionnaries, where the keys are the headers and the values are the data stored 
+        in the csv file 
+        
+    Raises: 
+        
+    
+    """
     csv_file=open(filename,'r')
     reader=csv.reader(csv_file)
     mydict=dict((rows[0],rows[1]) for rows in reader)
@@ -230,14 +246,18 @@ def readCSV(filename) :
     print mydict
 
 def writeCSV(filename,dictionary) : 
-    file_name=open(filename,'w')
-    file_temp_writer=csv.writer(file_name)
-    for d in dicto:
-        temp_list=[]
-        for key,value in d.items():
-            temp_list.append(key)
-            temp_list.append(value)
-        file_temp_writer.writerow(temp_list)
+    import csv
+    with open(filename,'w') as file_name: 
+        file_temp_writer=csv.writer(file_name,delimiter=separator)
+        keys=dictionary[0].keys()
+        file_temp_writer.writerow(keys)
+        for d in dictionary:
+            temp_list=[]
+            for value in d.values():
+                temp_list.append(value)
+            file_temp_writer.writerow(temp_list)
+
+
 
 
 
