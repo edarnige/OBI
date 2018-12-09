@@ -75,7 +75,6 @@ dicto=listORFs[:]
 #proj.writeCSV('ORF_90.csv',dicto)
 
 
-
 #Threshold 0
 print "Threshold 0"
 listORFs= proj.findORF(seq,3*0,codeTable)
@@ -83,9 +82,4 @@ print "how many ORFs:",len(listORFs)
 dicto=listORFs[:]
 #proj.writeCSV('ORF_0.csv',dicto)
 
-#Threshold 360
-print "Threshold 360"
-listORFs= proj.findORF(seq,3*360,codeTable)
-print "how many ORFs:",len(listORFs)
-dicto=listORFs[:]
-#proj.writeCSV('ORF_0.csv',dicto)
+
