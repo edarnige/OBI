@@ -16,7 +16,7 @@ def getGeneticCode(trans_table) :
     Based on the standard code table, modifications are added following the guidelines given on the webpage.
     In order to avoid time-consuming processes, only a limited number of genetic tables will be 
     loaded
-    This functions has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    This functions has been written by Eden Darnige, Juan Manuel Garcia and Alexandre Lambard
     
     Args: 
         trans_table: NCBI genetic table ID. This ID is a non-zero number
@@ -86,7 +86,7 @@ def findORF(seq,threshold,codeTable) :
     This function retrieves all the ORF present in a DNA sequence, extracting several data about each 
     one of them. Since it works with protein sequences to find ORFs, a conversion on the indexes and on the
     threshold is neccesary to be made. A threshold is used to filter out small ORFs.
-    This function has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    This function has been written by Eden Darnige, Juan Manuel Garcia and Alexandre Lambard
     
     Args: 
         seq: A dictionnary whose key is a description of the DNA sequence (i.e., header of a FASTA file) 
@@ -147,7 +147,7 @@ def getLengths(orfList) :
     
     This function retrieves the length of all the ORF of a DNA sequence. This will be stored in a list with 
     dictionnaries, where the index and the length is added for each ORF. 
-    This functions has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    This functions has been written by Eden Darnige, Juan Manuel Garcia and Alexandre Lambard
     
     Args: 
         orfList: A list of ORF, obtained from the findORF function.
@@ -169,7 +169,7 @@ def getLongestORF(orfList) :
     """Returns the longest ORF 
     
     This function returns an ORF whose length is the highest one of a list of ORF. 
-    It has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    It has been written by Eden Darnige, Juan Manuel Garcia and Alexandre Lambard
 
     Args: 
         orfList: A list of ORF, obtained from the findORF function.
@@ -195,7 +195,7 @@ def TopLongestORF(orfList,value) :
     This function retrieves the longest ORFs from a ORF list. To do so, a value which will be used as a threshold 
     should be given. An index is calculated using the value given by the user.  The ORF list is sorted and the 
     longest ORFs are extracted. 
-    It has been written by Eden Darnige, Juan Manuel Garcia and ??Alexandre Lambard??
+    It has been written by Eden Darnige, Juan Manuel Garcia and Alexandre Lambard
     
     Args: 
         orfList: A list of ORF, obtained from the findORF function.
@@ -239,13 +239,39 @@ def readCSV(filename,separator) :
         
     
     """
-    csv_file=open(filename,'r')
-    reader=csv.reader(csv_file)
-    mydict=dict((rows[0],rows[1]) for rows in reader)
-    #mydict={k:int(v) for k, v in mydict.iteritems()}  #string to int
-    print mydict
+    import csv
+    ORF=[]
+    with open(filename,'r') as csv_file: 
+        reader=csv.DictReader(csv_file,delimiter=separator)
+        line_count=0
+        for row in reader :
+            dicc={} 
+            if line_count==0: 
+                keys=row
+                dicc=rewrite(dicc,keys,"key")
+                line_count+=1
+            dicc=rewrite(dicc,row,"value") 
+            ORF.append(dicc)
+            line_count+=1
+    return ORF
 
 def writeCSV(filename,separator,dictionary) : 
+    '''Writes a ORF dictionnary into a CSV file
+    This function loads a Python dictionnary into a CSV file. Keys of the dictionnary will be put in the 
+    first line of this file as header, whereas the values will be in their corresponding columns. 
+    This function has been written by Eden Darnige. 
+    
+    Args: 
+        filename: filename of the csv file, as a string
+        separator: row separator, as a string
+        dictionnary: ORF dictionnary where the data is stored
+    
+    Returns: 
+        A CSV file with the content of the dictionnary 
+        
+    Raises: 
+        
+    '''
     import csv
     with open(filename,'w') as file_name: 
         file_temp_writer=csv.writer(file_name,delimiter=separator)
