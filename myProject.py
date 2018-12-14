@@ -113,7 +113,7 @@ def findORF(seq,threshold,codeTable) :
     if type(seq) not dict : 
         raise TypeError
         
-    threshold=threshold//3
+    threshold=threshold//3 # Since protein sequences are taken, threshold must be modified
     count=0
     seq_frames=mybio.translate_frame(seq,12,codeTable)
     
@@ -123,14 +123,19 @@ def findORF(seq,threshold,codeTable) :
             index=0
 
             while index<len(seq_frames.values()[i]) : 
-                AA_end=seq_frames.values()[i].find("_",index)
-                AA_start=seq_frames.values()[i].find(codeTable["ATG"],index)
+                AA_end=seq_frames.values()[i].find("_",index)  # Start protein index
+                AA_start=seq_frames.values()[i].find(codeTable["ATG"],index) # Stop protein index 
                 if (AA_end==-1 or AA_start==-1) : 
                     break
                 if AA_end-AA_start>= threshold : 
                     frame=int(seq_frames.keys()[i].replace("frame",""))
+                    '''
+                    In the following step, the conversion of start and stop protein index into a valid nucleic 
+                    sequence index is done. Since the frame value given might be negative, two different situations
+                    are considered.
+                    '''
                     if frame<0 : 
-                        start_index=len(seq)-(abs(frame)-1)-AA_end*3-3
+                        start_index=len(seq)-(abs(frame)-1)-AA_end*3-3 
                         end_index=len(seq)-(abs(frame)-1)-AA_start*3-3
                     else : 
                         start_index=(frame-1)+AA_start*3
@@ -283,13 +288,7 @@ def writeCSV(filename,separator,dictionary) :
                 temp_list.append(value)
             file_temp_writer.writerow(temp_list)
 
-# def compare(orflist1,orflist2) :
-#     identic=[]
-    
-#     for i,j in [orflist1[:]["protein"],orflist2[:]["protein"]] :
-        
-#         if i==j : 
-#             identic[""] 
+
          
 
 
